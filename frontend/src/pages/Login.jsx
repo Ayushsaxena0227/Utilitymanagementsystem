@@ -30,6 +30,7 @@ function Login() {
 
       if (response.ok) {
         const resData = await response.json();
+        console.log("res: ",resData);
         localStorage.setItem("smartutilitytoken", resData.token);
         setModalMessage("Login successful!");
         setIsModalOpen(true);

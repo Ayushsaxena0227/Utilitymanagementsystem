@@ -16,7 +16,6 @@ import ThemeToggleButton from "./components/ThemeToggleButton";
 const App = () => {
   return (
     <AuthProvider>
-      <PubNubProvider>
         <div>
           <ThemeToggleButton />
           <Routes>
@@ -42,7 +41,6 @@ const App = () => {
             />
           </Routes>
         </div>
-      </PubNubProvider>
     </AuthProvider>
   );
 };

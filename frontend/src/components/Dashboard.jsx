@@ -11,28 +11,12 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import Modal from "./Modal";
 import { usePubNub } from "pubnub-react";
 import PubNub from "pubnub";
+import { PubNubContext } from "../context/PubNubContext";
 function Dashboard() {
   const [waterData, setWaterData] = useState([]);
   const [gasData, setGasData] = useState([]);
   const [electricityData, setElectricityData] = useState([]);
-
-  useEffect(() => {
-    // Fetch water data
-    fetch("/api/waterData")
-      .then((res) => res.json())
-      .then((data) => setWaterData(data));
-
-    // Fetch gas data
-    fetch("/api/gasData")
-      .then((res) => res.json())
-      .then((data) => setGasData(data));
-
-    // Fetch electricity data
-    fetch("/api/electricityData")
-      .then((res) => res.json())
-      .then((data) => setElectricityData(data));
-  }, []);
-
+  const {pubnub} = useContext(PubNubContext);
   const [utilityData, setUtilityData] = useState([]);
   // const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -51,9 +35,36 @@ function Dashboard() {
   // console.log(user);
   const navigate = useNavigate();
   const { user, loading } = useContext(AuthContext);
-  const pubnub = usePubNub();
+  // const pubnub = usePubNub();
+  // console.log("This is pubnub: ", pubnub);
   const [isPubNubReady, setIsPubNubReady] = useState(false);
   const [notification, setNotification] = useState("");
+
+  useEffect(() => {
+    // Fetch water data
+    fetch("/api/waterData")
+      .then((res) => res.json())
+      .then((data) =>{
+        console.log("WaterData: ",data);
+        setWaterData(data)
+      });
+
+    // Fetch gas data
+    fetch("/api/gasData")
+      .then((res) => res.json())
+      .then((data) =>{
+        console.log("GasData: ",data);
+        setGasData(data)
+      });
+
+    // Fetch electricity data
+    fetch("/api/electricityData")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("ElectricityData: ",data);
+        setElectricityData(data)
+      });
+  }, []);
 
   useEffect(() => {
     if (!loading && pubnub && user && user._id) {
@@ -101,18 +112,6 @@ function Dashboard() {
     fetchUtilityData(selectedUtility, 1);
   }, [selectedUtility]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!pubnub) {
-    return <div>Please log in to use the chat features.</div>;
-  }
-
-  if (!isPubNubReady) {
-    return <div>Loading...</div>;
-  }
-
   useEffect(() => {
     if (notification) {
       console.log("Displaying notification:", notification);
@@ -123,18 +122,6 @@ function Dashboard() {
     fetchUtilityData(selectedUtility, 1);
   }, [selectedUtility]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!pubnub) {
-    return <div>Please log in to use the chat features.</div>;
-  }
-
-  if (!isPubNubReady) {
-    return <div>Loading...</div>;
-  }
-
   useEffect(() => {
     const intervalId = setInterval(() => {
       setNotification("Reminder: Check your billing details!");
@@ -144,7 +131,7 @@ function Dashboard() {
   }, []);
 
   const fetchUtilityData = async (utilityType, limit = 5) => {
-    setLoading(true);
+    // setLoading(true);
     setError(null);
     try {
       // Determine the endpoint based on whether we're fetching limited data or not
@@ -172,9 +159,34 @@ function Dashboard() {
     } catch (err) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!pubnub) {
+    return <div>Please log in to use the chat features.</div>;
+  }
+
+  if (!isPubNubReady) {
+    return <div>Loading...</div>;
+  }
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!pubnub) {
+    return <div>Please log in to use the chat features.</div>;
+  }
+
+  if (!isPubNubReady) {
+    return <div>Loading...</div>;
+  }
+
 
   const handleInputChange = (e) => {
     setUsageInput({ ...usageInput, [e.target.name]: e.target.value });
@@ -334,14 +346,9 @@ function Dashboard() {
     navigate("/billing", { state: { waterData, gasData, electricityData } });
   };
   const closeModal = () => setIsModalOpen(false);
+  
   const handleTestNotification = () => {
     if (user && user._id) {
-      const pubnub = new PubNub({
-        publishKey: "pub-c-8f37cfad-919e-4519-9260-cb77907b1bf4",
-        subscribeKey: "sub-c-81dc4665-6f4f-4788-bc47-18119277bf07",
-        uuid: user._id,
-      });
-
       pubnub.publish(
         {
           channel: `notifications-${user._id}`,
