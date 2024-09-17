@@ -1,0 +1,32 @@
+{
+  "dashboard": {
+    "welcome": "डैशबोर्ड पर आपका स्वागत है",
+    "title": "डैशबोर्ड",
+    "viewDetails": "विवरण देखें",
+    "backToDashboard": "डैशबोर्ड पर वापस जाएं",
+    "logout": "लॉगआउट"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "एक त्रुटि उत्पन्न हुई"
+  },
+  "form": {
+    "enterUsageData": "{{utility}} उपयोग डेटा दर्ज करें",
+    "startDate": "प्रारंभ तिथि:",
+    "endDate": "अंतिम तिथि:",
+    "usage": "उपयोग (इकाइयाँ):",
+    "costPerUnit": "प्रति इकाई लागत ($):",
+    "totalCost": "कुल लागत:",
+    "submit": "जमा करें"
+  },
+  "buttons": {
+    "water": "पानी",
+    "gas": "गैस",
+    "electricity": "बिजली",
+    "viewDetails": "विवरण देखें",
+    "fetchRecent": "अंतिम 5 {utility} उपयोग प्राप्त करें"
+  },
+  "notifications": {
+    "dismiss": "खारिज करें"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "dashboard": {
+    "welcome": "Welcome",
+    "title": "Dashboard",
+    "viewDetails": "View Details",
+    "backToDashboard": "Back to Dashboard",
+    "logout": "Logout",
+    "usageChart": "Usagechart"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "noDataAvailable": "No Data Available"
+  },
+  "form": {
+    "enterUsageData": "Enter {{utility}} Usage Data",
+    "startDate": "Start Date:",
+    "endDate": "End Date:",
+    "usage": "Usage (units):",
+    "costPerUnit": "Cost per Unit ($):",
+    "totalCost": "Total Cost:",
+    "submit": "Submit"
+  },
+  "buttons": {
+    "water": "Water",
+    "gas": "Gas",
+    "electricity": "Electricity",
+    "fetchRecent": "Fetch Last 5 {utility} Usages",
+    "viewDetails": "View Details"
+  },
+  "notifications": {
+    "dismiss": "Dismiss"
+  }
+}

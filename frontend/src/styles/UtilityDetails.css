@@ -1,0 +1,113 @@
+.utility-details-container {
+  padding: 20px;
+}
+
+.report-section {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+.btn {
+  margin: 13%;
+}
+.download-btn {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.download-btn:hover {
+  background-color: #218838;
+}
+.utility-table-container {
+  margin: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+.utility-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.utility-table thead {
+  background-color: #4caf50;
+  color: #323232;
+}
+.black {
+  color: black;
+}
+
+.billing-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  float: right;
+}
+.back-button {
+  margin-left: -78%;
+}
+
+.billing-button:hover {
+  background-color: #45a049;
+}
+.utility-table th,
+.utility-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.utility-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.delete-button {
+  background-color: #e74c3c;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #c0392b;
+}
+.summary-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.summary-container h3 {
+  color: black;
+  margin-bottom: 10px;
+}
+
+.summary-container p {
+  color: black;
+  margin: 5px 0;
+}
+@media (max-width: 600px) {
+  .utility-table th,
+  .utility-table td {
+    padding: 8px 10px;
+  }
+
+  .delete-button {
+    padding: 6px 10px;
+  }
+}

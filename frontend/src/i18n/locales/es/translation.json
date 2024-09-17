@@ -1,0 +1,33 @@
+{
+  "dashboard": {
+    "welcome": "Bienvenido al Tablero",
+    "title": "Tablero",
+    "viewDetails": "Ver Detalles",
+    "backToDashboard": "Volver al Tablero",
+    "logout": "Cerrar sesión"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error"
+  },
+  "form": {
+    "enterUsageData": "Ingrese los Datos de Uso de {{utility}}",
+    "startDate": "Fecha de Inicio:",
+    "endDate": "Fecha de Fin:",
+    "usage": "Uso (unidades):",
+    "costPerUnit": "Costo por Unidad ($):",
+    "totalCost": "Costo Total:",
+    "submit": "Enviar"
+  },
+  "buttons": {
+    "water": "Agua",
+    "gas": "Gas",
+    "electricity": "Electricidad",
+    "viewDetails": "Ver Detalles",
+    "fetchRecent": "Obtener Últimos 5 Usos de {utility}"
+  },
+
+  "notifications": {
+    "dismiss": "Descartar"
+  }
+}

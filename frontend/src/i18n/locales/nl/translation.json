@@ -1,0 +1,32 @@
+{
+  "dashboard": {
+    "welcome": "Welkom op het Dashboard",
+    "title": "Dashboard",
+    "viewDetails": "Bekijk Details",
+    "backToDashboard": "Terug naar Dashboard",
+    "logout": "Uitloggen"
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Er is een fout opgetreden"
+  },
+  "form": {
+    "enterUsageData": "Voer gebruiksgegevens in voor {{utility}}",
+    "startDate": "Begindatum:",
+    "endDate": "Einddatum:",
+    "usage": "Gebruik (eenheden):",
+    "costPerUnit": "Kosten per eenheid ($):",
+    "totalCost": "Totale kosten:",
+    "submit": "Verzenden"
+  },
+  "buttons": {
+    "water": "Water",
+    "gas": "Gas",
+    "electricity": "Elektriciteit",
+    "viewDetails": "Bekijk Details",
+    "fetchRecent": "Haal laatste 5 {utility} gebruiksgegevens op"
+  },
+  "notifications": {
+    "dismiss": "Afwijzen"
+  }
+}

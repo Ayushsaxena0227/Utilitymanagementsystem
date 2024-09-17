@@ -1,0 +1,32 @@
+{
+  "dashboard": {
+    "welcome": "Добро пожаловать на Панель",
+    "title": "Панель",
+    "viewDetails": "Посмотреть детали",
+    "backToDashboard": "Вернуться на Панель",
+    "logout": "Выйти"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Произошла ошибка"
+  },
+  "form": {
+    "enterUsageData": "Введите данные по использованию {{utility}}",
+    "startDate": "Дата начала:",
+    "endDate": "Дата окончания:",
+    "usage": "Использование (единицы):",
+    "costPerUnit": "Стоимость за единицу ($):",
+    "totalCost": "Общая стоимость:",
+    "submit": "Отправить"
+  },
+  "buttons": {
+    "water": "Вода",
+    "gas": "Газ",
+    "electricity": "Электричество",
+    "viewDetails": "Посмотреть детали",
+    "fetchRecent": "Получить последние 5 использований {utility}"
+  },
+  "notifications": {
+    "dismiss": "Отклонить"
+  }
+}
