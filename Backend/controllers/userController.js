@@ -58,7 +58,6 @@ exports.registerUser = async (req, res) => {
 // Login a user
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     // Find the user by email
     const user = await User.findOne({ email });
@@ -91,21 +90,30 @@ exports.loginUser = async (req, res) => {
         const pubnub = await initPubNub(user.id);
 
         // Determine the status of utility data
-        const highUsage = utilityData.some((data) => data.usage > 600);
+        const totalUsage = utilityData.reduce((accum, current) => {
+          if (!current.paid) {
+            accum = accum + current.usage;
+            return accum;
+          }
+          return accum;
+        }, 0);
+
+        const highUsage = 600;
         const unpaidBills = utilityData.some(
           (data) => data.status === "unpaid"
         );
-        console.log("highUsage:", highUsage);
-        console.log("unpaidBills:", unpaidBills);
 
         // Create the message object with conditions
-        const message = {
-          highUsage: highUsage, // Set true if high usage detected
-          unpaidBills: unpaidBills, // Set true if unpaid bills detected
-        };
+        const message = {};
+        if (highUsage) message.highUsage = true;
+        if (unpaidBills) message.unpaidBills = true;
 
-        // Publish message to PubNub
-        if (highUsage || unpaidBills) {
+        // Publish message to PubNub if any condition is true
+        console.log(totalUsage, unpaidBills);
+
+        if (totalUsage > highUsage || unpaidBills) {
+          console.log(totalUsage, unpaidBills);
+          console.log(`notifications-${user.id}`);
           pubnub.publish(
             {
               channel: `notifications-${user.id}`,
@@ -120,6 +128,7 @@ exports.loginUser = async (req, res) => {
             }
           );
         }
+
         res.json({ token, msg: "User successfully logged in" });
       }
     );
@@ -128,7 +137,6 @@ exports.loginUser = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
-
 // Get user data
 exports.getUser = async (req, res) => {
   try {

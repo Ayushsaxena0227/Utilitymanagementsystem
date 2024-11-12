@@ -1,0 +1,17 @@
+.button {
+  font-family: "Montserrat", sans-serif;
+  padding: 12px 15px;
+  margin-top: 20px;
+  /* background-color: #007bff; */
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  &:hover {
+    background-color: #007bff;
+  }
+}
+.btn-login {
+  color: black;
+}

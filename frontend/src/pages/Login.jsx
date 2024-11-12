@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
-import Modal from "../components/Modal";
 import GoogleLoginButton from "../components/GoogleLoginButton";
+import Modal from "../components/Modal";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -30,7 +30,7 @@ function Login() {
 
       if (response.ok) {
         const resData = await response.json();
-        console.log("res: ",resData);
+        console.log("res: ", resData);
         localStorage.setItem("smartutilitytoken", resData.token);
         setModalMessage("Login successful!");
         setIsModalOpen(true);
@@ -45,28 +45,11 @@ function Login() {
     }
   };
 
+  const loginwithgoogle = () => {
+    window.open("http://localhost:5000/auth/google", "_self");
+  };
   const closeModal = () => setIsModalOpen(false);
 
-  const handleGoogleSuccess = async (user) => {
-    const response = await fetch("http://localhost:5000/api/google-signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token: user.credential }),
-    });
-
-    if (response.ok) {
-      const userData = await response.json();
-      // Handle user data, e.g., store in local storage and redirect
-    } else {
-      console.error("Google Sign-In failed on backend");
-    }
-  };
-
-  const handleGoogleFailure = (error) => {
-    console.error("Google Sign-In failed", error);
-  };
   const handleGuestLogin = async () => {
     const guestCredentials = {
       email: "guest@example.com",
@@ -99,6 +82,7 @@ function Login() {
       console.error("Error during guest login:", err);
     }
   };
+
   const autofillGuestDetails = () => {
     setFormData({
       email: "guest@example.com",
@@ -136,10 +120,8 @@ function Login() {
         Autofill Guest Details
       </button>
       <hr />
-      <GoogleLoginButton
-        onSuccess={handleGoogleSuccess}
-        onFailure={handleGoogleFailure}
-      />
+      {/* <button onClick={loginwithgoogle}>Sign in with google</button> */}
+      <GoogleLoginButton />
       <Modal isOpen={isModalOpen} onClose={closeModal} message={modalMessage} />
     </div>
   );

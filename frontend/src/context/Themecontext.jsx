@@ -11,12 +11,19 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
     if (isDarkMode) {
-      document.body.classList.add("dark-mode");
-      document.body.classList.remove("light-mode");
+      const rootDiv = document.getElementById("root");
+      rootDiv.classList.add("dark-mode");
+      rootDiv.classList.remove("light-mode");
+
+      // document.body.classList.add("dark-mode");
+      // document.body.classList.remove("light-mode");
       localStorage.setItem("theme", "dark");
     } else {
-      document.body.classList.add("light-mode");
-      document.body.classList.remove("dark-mode");
+      const rootDiv = document.getElementById("root");
+      rootDiv.classList.add("light-mode");
+      rootDiv.classList.remove("dark-mode");
+      // document.body.classList.add("light-mode");
+      // document.body.classList.remove("dark-mode");
       localStorage.setItem("theme", "light");
     }
   }, [isDarkMode]);

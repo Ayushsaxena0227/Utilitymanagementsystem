@@ -6,25 +6,26 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
-import { format, parseISO } from "date-fns"; // Import date-fns for date formatting
-import LanguageSwitcher from "./LanguageSwitcher";
-import Modal from "./Modal";
-import { usePubNub } from "pubnub-react";
-import PubNub from "pubnub";
+import { format, parseISO } from "date-fns";
+import SuccessModal from "./SuccessModal";
 import { PubNubContext } from "../context/PubNubContext";
+import NotificationModal from "../components/NotificationModal";
+import LanguageSwitcher from "./LanguageSwitcher";
+import Spinner from "./Spinner";
+
 function Dashboard() {
   const [waterData, setWaterData] = useState([]);
   const [gasData, setGasData] = useState([]);
   const [electricityData, setElectricityData] = useState([]);
-  const {pubnub} = useContext(PubNubContext);
+  const { pubnub } = useContext(PubNubContext);
   const [utilityData, setUtilityData] = useState([]);
-  // const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedUtility, setSelectedUtility] = useState("water");
   const [fullUtilityData, setFullUtilityData] = useState([]);
   const [message, setModalMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [costPerUnit, setCostPerUnit] = useState(0);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const { t } = useTranslation();
   const [usageInput, setUsageInput] = useState({
     startDate: "",
@@ -32,11 +33,8 @@ function Dashboard() {
     usage: "",
     costPerUnit: "",
   });
-  // console.log(user);
   const navigate = useNavigate();
   const { user, loading } = useContext(AuthContext);
-  // const pubnub = usePubNub();
-  // console.log("This is pubnub: ", pubnub);
   const [isPubNubReady, setIsPubNubReady] = useState(false);
   const [notification, setNotification] = useState("");
 
@@ -44,25 +42,25 @@ function Dashboard() {
     // Fetch water data
     fetch("/api/waterData")
       .then((res) => res.json())
-      .then((data) =>{
-        console.log("WaterData: ",data);
-        setWaterData(data)
+      .then((data) => {
+        console.log("WaterData: ", data);
+        setWaterData(data);
       });
 
     // Fetch gas data
     fetch("/api/gasData")
       .then((res) => res.json())
-      .then((data) =>{
-        console.log("GasData: ",data);
-        setGasData(data)
+      .then((data) => {
+        console.log("GasData: ", data);
+        setGasData(data);
       });
 
     // Fetch electricity data
     fetch("/api/electricityData")
       .then((res) => res.json())
       .then((data) => {
-        console.log("ElectricityData: ",data);
-        setElectricityData(data)
+        console.log("ElectricityData: ", data);
+        setElectricityData(data);
       });
   }, []);
 
@@ -70,6 +68,7 @@ function Dashboard() {
     if (!loading && pubnub && user && user._id) {
       setIsPubNubReady(true);
       const channel = `notifications-${user._id}`;
+      console.log(channel);
       console.log(`Subscribing to channel: ${channel}`);
 
       pubnub.subscribe({ channels: [channel] });
@@ -77,19 +76,36 @@ function Dashboard() {
       const listener = {
         message: (event) => {
           console.log("Message event received:", event);
-          const { message } = event;
-          let notificationMessage = "";
 
+          // Extract message and log it
+          const { message } = event;
+          console.log("Raw message received:", message);
+
+          let notificationMessages = [];
+
+          // Check for high usage and unpaid bills and log
           if (message.highUsage) {
-            notificationMessage = "You have high utility usage!";
+            console.log("High usage detected");
+            notificationMessages.push("You have high utility usage!");
           }
           if (message.unpaidBills) {
-            notificationMessage = "You have unpaid bills!";
+            console.log("Unpaid bills detected");
+            notificationMessages.push("You have unpaid bills!");
           }
 
-          if (notificationMessage) {
-            setNotification(notificationMessage);
+          // Set notification based on the messages collected
+          if (notificationMessages.length === 0) {
+            console.log("No issues detected");
+            setNotification("We are Tracking, status Clean");
+          } else {
+            console.log(
+              "Notifications to show:",
+              notificationMessages.join(" ")
+            );
+            setNotification(notificationMessages.join(" "));
           }
+
+          setIsModalOpen(true);
         },
       };
 
@@ -102,11 +118,14 @@ function Dashboard() {
     }
   }, [user, pubnub, loading]);
 
-  useEffect(() => {
-    if (notification) {
-      console.log("Displaying notification:", notification);
+  const handleModalClose = (remindLater) => {
+    setIsModalOpen(false); // Close the modal immediately
+    if (remindLater) {
+      setTimeout(() => {
+        setIsModalOpen(true);
+      }, 60000); // Remind later in 1 minute
     }
-  }, [notification]);
+  };
 
   useEffect(() => {
     fetchUtilityData(selectedUtility, 1);
@@ -117,18 +136,6 @@ function Dashboard() {
       console.log("Displaying notification:", notification);
     }
   }, [notification]);
-
-  useEffect(() => {
-    fetchUtilityData(selectedUtility, 1);
-  }, [selectedUtility]);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setNotification("Reminder: Check your billing details!");
-    }, 60000);
-
-    return () => clearInterval(intervalId);
-  }, []);
 
   const fetchUtilityData = async (utilityType, limit = 5) => {
     // setLoading(true);
@@ -164,7 +171,11 @@ function Dashboard() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   }
 
   if (!pubnub) {
@@ -172,21 +183,16 @@ function Dashboard() {
   }
 
   if (!isPubNubReady) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   }
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!pubnub) {
-    return <div>Please log in to use the chat features.</div>;
-  }
-
-  if (!isPubNubReady) {
-    return <div>Loading...</div>;
-  }
-
+  const handleOkay = () => {
+    setNotification("");
+  };
+  const handleRemindLater = () => {};
 
   const handleInputChange = (e) => {
     setUsageInput({ ...usageInput, [e.target.name]: e.target.value });
@@ -230,11 +236,11 @@ function Dashboard() {
           usage: "",
           costPerUnit: "",
         });
-        setModalMessage("Successfully Filled, Now check Recent usages!");
-        setIsModalOpen(true);
+        setSuccessMessage("Utility details submitted successfully!");
+        setShowSuccessModal(true);
       } else {
-        setModalMessage("Cannot submit your Utility!");
-        setIsModalOpen(false);
+        setSuccessMessage("Cannot submit your Utility!");
+        setShowSuccessModal(false);
         throw new Error(`Error: ${res.status} ${res.statusText}`);
       }
     } catch (err) {
@@ -346,13 +352,14 @@ function Dashboard() {
     navigate("/billing", { state: { waterData, gasData, electricityData } });
   };
   const closeModal = () => setIsModalOpen(false);
-  
+  const handleModalClose2 = () => setShowSuccessModal(false);
+
   const handleTestNotification = () => {
     if (user && user._id) {
       pubnub.publish(
         {
           channel: `notifications-${user._id}`,
-          message: { highUsage: true, unpaidBills: false },
+          message: { highUsage: true, unpaidBills: true },
         },
         (status, response) => {
           if (status.error) {
@@ -368,6 +375,13 @@ function Dashboard() {
     <div className="dashboard-container">
       <div className="dashboard-header">
         <LanguageSwitcher />
+        {isModalOpen && (
+          <NotificationModal
+            message={notification}
+            onClose={handleModalClose}
+          />
+        )}
+
         <h1>{t("dashboard.title")}</h1>
         <button className="logout-btn" onClick={handleLogout}>
           {t("dashboard.logout")}
@@ -389,15 +403,6 @@ function Dashboard() {
           <p>Loading...</p>
         )}
       </div>
-
-      {notification && (
-        <div className="notification-popup">
-          <p>{notification}</p>
-          {/* <button onClick={() => setNotification(null)}>
-            {t("notifications.dismiss")}
-          </button> */}
-        </div>
-      )}
 
       <div className="utility-buttons">
         <button
@@ -469,10 +474,10 @@ function Dashboard() {
           {t("form.submit")}
         </button>
       </form>
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        message={setModalMessage}
+      <SuccessModal
+        show={showSuccessModal}
+        onHide={handleModalClose2}
+        message={successMessage}
       />
 
       <button className="fetch-recent-btn" onClick={handleFetchRecentUsage}>

@@ -16,31 +16,31 @@ import ThemeToggleButton from "./components/ThemeToggleButton";
 const App = () => {
   return (
     <AuthProvider>
-        <div>
-          <ThemeToggleButton />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/dashboard"
-              element={<PrivateRoute component={Dashboard} />}
-            />
-            <Route
-              path="/utility-details/:utilityType"
-              element={<PrivateRoute component={UtilityDetails} />}
-            />
-            <Route
-              path="/billing"
-              element={<PrivateRoute component={Billing} />}
-            />
-            <Route
-              path="/add-billing"
-              element={<PrivateRoute component={AddBilling} />}
-            />
-          </Routes>
-        </div>
+      <div>
+        <ThemeToggleButton />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/dashboard"
+            element={<PrivateRoute component={Dashboard} />}
+          />
+          <Route
+            path="/utility-details/:utilityType"
+            element={<PrivateRoute component={UtilityDetails} />}
+          />
+          <Route
+            path="/billing"
+            element={<PrivateRoute component={Billing} />}
+          />
+          <Route
+            path="/add-billing"
+            element={<PrivateRoute component={AddBilling} />}
+          />
+        </Routes>
+      </div>
     </AuthProvider>
   );
 };

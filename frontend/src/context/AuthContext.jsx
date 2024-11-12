@@ -4,7 +4,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -14,17 +14,19 @@ export const AuthProvider = ({ children }) => {
             "x-auth-token": localStorage.getItem("smartutilitytoken"),
           },
         });
+
         if (res.ok) {
           const userInfo = await res.json();
-          console.log("Fetched user info:", userInfo);
           setUser(userInfo);
         } else {
-          console.error("Failed to fetch user info");
+          if (res.status !== 401) {
+            console.error("Failed to fetch user info:", res.statusText);
+          }
         }
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false); // Set loading to false after fetching is done
+        setLoading(false);
       }
     };
 

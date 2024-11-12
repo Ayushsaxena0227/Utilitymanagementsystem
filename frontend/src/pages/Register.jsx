@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 import Modal from "../components/Modal";
+import GoogleLoginButton from "../components/GoogleLoginButton";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -46,6 +47,33 @@ function Register() {
   };
   const closeModal = () => setIsModalOpen(false);
 
+  const handleGoogleSuccess = async (user) => {
+    const response = await fetch("http://localhost:5000/api/google-signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token: user.credential }),
+    });
+
+    if (response.ok) {
+      const userData = await response.json();
+      localStorage.setItem("smartutilitytoken", userData.token);
+      setModalMessage("Registration successful! Redirecting to dashboard...");
+      setIsModalOpen(true);
+      setTimeout(() => navigate("/dashboard"), 2000);
+    } else {
+      const errorData = await response.json();
+      console.error(errorData);
+      setModalMessage("An error occurred. Please try again.");
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleGoogleFailure = (error) => {
+    console.error("Google Sign-In failed", error);
+  };
+
   return (
     <div>
       <h1>Register</h1>
@@ -73,6 +101,11 @@ function Register() {
         />
         <button type="submit">Register</button>
       </form>
+      <hr />
+      <GoogleLoginButton
+        onSuccess={handleGoogleSuccess}
+        onFailure={handleGoogleFailure}
+      />
       <Modal isOpen={isModalOpen} onClose={closeModal} message={modalMessage} />
     </div>
   );

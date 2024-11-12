@@ -64,6 +64,9 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 5px 10px rgba(0, 123, 255, 0.3);
 }
+.fetch-recent-btn:hover {
+  background-color: #28a745;
+}
 
 .utility-btn.active {
   background-color: #0056b3;

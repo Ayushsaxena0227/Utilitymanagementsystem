@@ -1,49 +1,46 @@
 import React, { useEffect } from "react";
+import "../styles/GoggleButton.css";
+import { jwtDecode } from "jwt-decode"; // Change to default import
+import { useNavigate } from "react-router-dom";
 
 const GoogleLoginButton = () => {
+  const navigate = useNavigate();
+  const GOOGLE_CLIENT_ID =
+    "98041991381-4qbvh7f3mnj8kcchnn5cfono3l2o1rhq.apps.googleusercontent.com"; // Replace with your actual client ID
+
   useEffect(() => {
-    const loadGoogleScript = () => {
-      const script = document.createElement("script");
-      script.src = "https://apis.google.com/js/platform.js";
-      script.async = true;
-      script.defer = true;
-      script.onload = initializeGoogleSignIn;
-      document.body.appendChild(script);
-    };
-
     const initializeGoogleSignIn = () => {
-      if (window.gapi && window.gapi.auth2) {
-        window.gapi.load("auth2", () => {
-          const auth2 = window.gapi.auth2.init({
-            client_id:
-              "98041991381-4qbvh7f3mnj8kcchnn5cfono3l2o1rhq.apps.googleusercontent.com",
-          });
-
-          auth2.attachClickHandler(
-            document.getElementById("google-signin-button"),
-            {},
-            (googleUser) => {
-              // Handle successful sign-in
-              console.log(
-                "Signed in as:",
-                googleUser.getBasicProfile().getName()
-              );
-            },
-            (error) => {
-              // Handle sign-in error
-              console.error("Sign-in error:", error);
-            }
-          );
-        });
-      } else {
-        console.error("Google API not loaded");
-      }
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse,
+      });
+      window.google.accounts.id.renderButton(
+        document.getElementById("googleSignInButton"),
+        { theme: "outline", size: "large" } // customization options
+      );
+      window.google.accounts.id.prompt(); // optional
     };
 
-    loadGoogleScript();
+    if (window.google && window.google.accounts) {
+      initializeGoogleSignIn();
+    } else {
+      console.error("Google Identity Services script not loaded.");
+    }
   }, []);
 
-  return <button id="google-signin-button">Sign in with Google</button>;
+  const handleCredentialResponse = (response) => {
+    console.log("Encoded JWT ID token: " + response.credential);
+    // decode and handle the token as needed
+    const userObject = jwtDecode(response.credential); // Use the default import jwtDecode
+    console.log(userObject);
+    navigate("/dashboard");
+  };
+
+  return (
+    <div>
+      <div id="googleSignInButton" className="button"></div>
+    </div>
+  );
 };
 
 export default GoogleLoginButton;

@@ -68,18 +68,15 @@ const UtilityDetails = () => {
 
   const handleDelete = async (id) => {
     try {
-      console.log(`Deleting ID: ${id}`); // Log the ID being deleted
+      console.log(`Deleting ID: ${id}`);
 
-      const res = await fetch(
-        `http://localhost:5000/api/utilityData/${id}`, // Updated URL structure
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json", // Optional for DELETE requests
-            "x-auth-token": localStorage.getItem("smartutilitytoken"),
-          },
-        }
-      );
+      const res = await fetch(`http://localhost:5000/api/utilityData/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json", // Optional for DELETE requests
+          "x-auth-token": localStorage.getItem("smartutilitytoken"),
+        },
+      });
 
       if (!res.ok) {
         const errorData = await res.json();
@@ -96,23 +93,20 @@ const UtilityDetails = () => {
 
   const handleSendReport = async () => {
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/sendReport`, // Corrected endpoint
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-auth-token": localStorage.getItem("smartutilitytoken"),
-          },
-          body: JSON.stringify({ utilityType, summary, utilityData }),
-        }
-      );
+      const res = await fetch(`http://localhost:5000/api/sendReport`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("smartutilitytoken"),
+        },
+        body: JSON.stringify({ utilityType, summary, utilityData }),
+      });
 
-      console.log("Response status:", res.status); // Log response status
+      console.log("Response status:", res.status);
 
       if (!res.ok) {
         const error = await res.json();
-        console.error("Error response:", error); // Log error response
+        console.error("Error response:", error);
         throw new Error("Failed to send report");
       }
 
@@ -121,13 +115,13 @@ const UtilityDetails = () => {
       setModalMessage("Successfully sent");
       setShowModal(true);
     } catch (err) {
-      console.error("Error:", err); // Log catch error
+      console.error("Error:", err);
       setModalMessage("Couldn't send");
       setShowModal(true);
     }
   };
   const handleCloseModal = () => {
-    setShowModal(false); // Hide the modal
+    setShowModal(false);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -135,8 +129,8 @@ const UtilityDetails = () => {
 
   const formatDataForBarChart = (data) => {
     const usageValues = data.map((item) => item.usage);
-    const labels = data.map(
-      (item) => format(parseISO(item.startDate), "dd-MM-yyyy") // Format dates as dd-MM-yyyy
+    const labels = data.map((item) =>
+      format(parseISO(item.startDate), "dd-MM-yyyy")
     );
     return {
       labels: labels,
@@ -405,10 +399,10 @@ const UtilityDetails = () => {
         </div>
       </div>
 
-      <button className="btn" onClick={handleDownloadPDF}>
+      <button className="pdf download-btn" onClick={handleDownloadPDF}>
         Download PDF
       </button>
-      <button onClick={handleBack} className="back-button">
+      <button onClick={handleBack} className="back-button download-btn ">
         Back to Dashboard
       </button>
       <Modal
